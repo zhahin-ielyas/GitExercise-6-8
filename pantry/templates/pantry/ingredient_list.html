@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Inventory</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+      
+        <section class="ingredients" id ="menu">
+            <h2 class="ingredients__title">Ingredients</h2>
+            <div class="ingredients__filters ingredients__hide-scrollbar">
+                <button class="ingredients__filter-btn active">All</button>
+                <button class="ingredients__filter-btn">Pantry</button>
+                <button class="ingredients__filter-btn">Fridge</button>
+                <button class="ingredients__filter-btn">Freezer</button>
+                <button class="ingredients__filter-btn">Other</button>
+                
+            </div>
+            <div class="ingredients__catalogue">
+                <article class="ingredients__card">
+                    <img class="ingredients__card-image" src="rice.png" alt="rice"/>
+                    <h4 class="ingredients__card-title">Rice</h4>
+
+                    <div class="ingredients__card-details flex-between">
+                    </div>
+                </article>
+
+                <article class="ingredients__card">
+                    <img class="ingredients__card-image" src="eggs.png" alt="eggs"/>
+                    <h4 class="ingredients__card-title">Eggs</h4>
+
+                    <div class="ingredients__card-details flex-between">
+                    </div>
+                </article>
+
+                <article class="ingredients__card">
+                    <img class="ingredients__card-image" src="garlic.png" alt="garlic"/>
+                    <h4 class="ingredients__card-title">Garlic</h4>
+
+                    <div class="ingredients__card-details flex-between">
+                    </div>
+                </article>
+            </div>
+
+                <button class="ingredients__button">Add Ingredients<img src="Add_round.svg" alt="add-img" /></button>
+                <button class="ingredients__button"><img src="Add_round.svg" alt="home-img" /></button>
+        
+        
+
+        </section>
+        
+        <script src="main.js"></script>
+    </body>
+</html>
