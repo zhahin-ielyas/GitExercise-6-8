@@ -11,6 +11,6 @@ def ingredient_list(request, category=None):
         pantry_items = PantryItem.objects.all().order_by('expiry_date')
 
 
-    return render(request, 'pantry/ingredient_list.html', {'pantry_items': pantry_items,'active_category': category or 'all',})
+    return render(request, 'pantry/ingredient_list.html', {'pantry_items': pantry_items,  'active_category': category or 'all',})
 
 # Create your views here.
