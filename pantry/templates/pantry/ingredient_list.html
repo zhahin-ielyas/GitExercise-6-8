@@ -1,30 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Pantry</title>
-    </head>
-    <body>
-        <header><h1>Pantry Items</h1></header>
-        <section>
-            <ul>
-                <li>
-                    <h2><a href="/">All</a></h2>
-                    {% for ingredients in ingredients %}
-                    {{ingredients}}
-                    {% endfor %}
-                </li>
-                <li>
-                    <h2><a href="/">Pantry</a></h2>
-                </li>
-                <li>
-                    <h2><a href="/">Fridge</a></h2>
-                </li>
-                <li>
-                    <h2><a href="/">Freezer</a></h2>
-                </li>
-            </ul>
-            
-        </section>
+{% extends 'pantry/base.html' %}
 
-    </body>
-</html>
+{% block title %}Pantry Items{% endblock %}
+
+{% block content %}
+<!-- Filter Buttons -->
+<div class="mb-4">
+    <h2>Filter By:</h2>
+    <ul class="nav nav-pills">
+        <li class="nav-item"><a href="{% url 'ingredient_list' %}" class="nav-link" {% if active_category == 'all' %}active{% endif %}>All</a></li>
+        <li class="nav-item"><a href="{% url 'ingredient_list_by_category' 'pantry' %}" class="nav-link" {% if active_category == 'pantry' %}active{% endif %}>Pantry</a></li>
+        <li class="nav-item"><a href="{% url 'ingredient_list_by_category' 'fridge' %}" class="nav-link" {% if active_category == 'fridge' %}active{% endif %}>Fridge</a></li>
+        <li class="nav-item"><a href="{% url 'ingredient_list_by_category' 'freezer' %}" class="nav-link" {% if active_category == 'freezer' %}active{% endif %}>Freezer</a></li>
+    </ul>
+</div>
+
+<!-- Pantry Items -->
+<ul class="list-group">
+    {% for item in pantry_items %}
+    <li class="list-group-item">
+        <strong>{{ item.ingredient.name }}</strong> —
+        {{ item.quantity }} {{ item.unit }}
+        ({{ item.storage_location|title }},
+        Exp. {{ item.expiry_date|default:"N/A" }})
+    </li>
+    {% empty %}
+    <li class="list-group-item">No pantry items found.</li>
+    {% endfor %}
+</ul>
+
+
+
+{% endblock %}
+
