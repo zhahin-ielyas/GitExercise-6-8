@@ -1,0 +1,10 @@
+{% extends 'pantry/base.html' %}
+
+{% block content %}
+    <h2>New item</h2>
+    <form method="PANTRY ITEM" class="pantry-item-form">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-secondary">Save</button>
+    </form>
+
+{% endblock %}
