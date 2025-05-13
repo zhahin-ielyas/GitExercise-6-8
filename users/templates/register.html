@@ -1,19 +1,127 @@
-<!-- register.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Register</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register - Student Meal Plan</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: linear-gradient(to right, #43cea2, #185a9d);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .box {
+      background: #fff;
+      padding: 45px 35px;
+      border-radius: 18px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      margin-bottom: 25px;
+      font-size: 28px;
+      color: #185a9d;
+      letter-spacing: 0.5px;
+    }
+
+    form {
+      text-align: left;
+    }
+
+    label {
+      font-weight: 600;
+      color: #444;
+      display: block;
+      margin-bottom: 6px;
+      margin-top: 18px;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px 12px;
+      margin-bottom: 5px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 15px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus {
+      border-color: #185a9d;
+      box-shadow: 0 0 0 2px rgba(24, 90, 157, 0.2);
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #43cea2;
+      border: none;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 25px;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background: #2ebd94;
+      transform: scale(1.02);
+    }
+
+    p {
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    a {
+      color: #185a9d;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <h2>Register</h2>
+  <div class="box">
+    <h2>Create Your Account</h2>
     <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
+      {% csrf_token %}
+      {% for field in form %}
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <div style="color: red; font-size: 13px;">{{ field.errors|striptags }}</div>
+        {% endif %}
+      {% endfor %}
+      <button type="submit">Register</button>
     </form>
+    <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+  </div>
 </body>
 </html>
 
-<a href="{% url 'logout' %}">Logout</a>
+
+
+
+
+
