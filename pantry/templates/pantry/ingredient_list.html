@@ -1,0 +1,26 @@
+{% extends 'pantry/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Pantry cards -->
+<div class="row">
+    {% for item in pantry_items %}
+    <div class="col-md-4">
+        <div class="card mb-3">
+            {% if item.ingredient.image %}
+                <img src="{{ item.ingredient.image.url }}" class="card-img-top" alt="{{ item.ingredient.name }}" style="height: 180px; width: 100%; object-fit: cover;">
+            {% else %}
+                <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="No image" style="height: 180px; width: 100%; object-fit: cover;">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ item.ingredient.name }}</h5>
+                <p>{{ item.quantity }} {{ item.unit }}</p>
+                <p>Stored in: {{ item.storage_location }}</p>
+                <p>Expires: {{ item.expiry_date|default:"N/A" }}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
