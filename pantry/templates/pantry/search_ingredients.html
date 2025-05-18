@@ -1,6 +1,51 @@
 {% extends 'pantry/base.html' %}
-
 {% block content %}
-<h2>Search Ingredients</h2>
-<p>Welcome to the search page!</p>
+<div class="container mt-4">
+    <h2>Search Ingredients</h2>
+    <form method="GET" action="{% url 'search_ingredients' %}">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search for an ingredient..." class="form-control mb-3">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    {% if results %}
+    <div class="row mt-4">
+        {% for ingredient in results %}
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <img src="https://spoonacular.com/cdn/ingredients_250x250/{{ ingredient.image }}" class="card-img-top" alt="{{ ingredient.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ ingredient.name }}</h5>
+                    <form method="POST" action="{% url 'add_pantry_item' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="ingredient_name" value="{{ ingredient.name }}">
+                        <input type="hidden" name="image_url" value="{{ ingredient.image }}">
+                        <input type="number" name="quantity" value="1" min="1" required>
+    
+                        <select name="unit">
+                            <option value="unit">unit</option>
+                            <option value="g">g</option>
+                            <option value="kg">kg</option>
+                            <option value="ml">ml</option>
+                            <option value="l">l</option>
+                            <option value="pcs">pcs</option>
+                        </select>
+
+                        <select name="storage_location">
+                            <option value="Pantry">Pantry</option>
+                            <option value="Fridge">Fridge</option>
+                            <option value="Freezer">Freezer</option>
+                        </select>
+
+                        <input type="text" name="expiry_date" placeholder="YYYY-MM-DD or N/A">
+
+                        <button type="submit" class="btn btn-success">Add to Pantry</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

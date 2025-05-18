@@ -2,22 +2,37 @@
 {% load static %}
 
 {% block content %}
-
-<!-- Pantry cards -->
+<div class="mb-4 text-end">
+    <a href="{% url 'generate_recipes' %}" class="btn btn-success">Generate Recipes</a>
+</div>
 <div class="row">
     {% for item in pantry_items %}
     <div class="col-md-4">
         <div class="card mb-3">
-            {% if item.ingredient.image %}
-                <img src="{{ item.ingredient.image.url }}" class="card-img-top" alt="{{ item.ingredient.name }}" style="height: 180px; width: 100%; object-fit: cover;">
+            {% if item.ingredient.image_url %}
+                <img src="{{ item.ingredient.image_url }}" class="card-img-top" alt="{{ item.ingredient.name }}">
             {% else %}
-                <img src="{% static 'default-image.jpg' %}" class="card-img-top" alt="No image" style="height: 180px; width: 100%; object-fit: cover;">
+                <div class="text-center py-3">No image available</div>
             {% endif %}
+
             <div class="card-body">
                 <h5 class="card-title">{{ item.ingredient.name }}</h5>
                 <p>{{ item.quantity }} {{ item.unit }}</p>
                 <p>Stored in: {{ item.storage_location }}</p>
-                <p>Expires: {{ item.expiry_date|default:"N/A" }}</p>
+                <p>Expires: 
+                    {% if item.expiry_date %}
+                        {{ item.expiry_date }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </p>
+
+                <!-- Buttons here -->
+                <div class="d-flex justify-content-between mt-3">
+                    <a href="{% url 'edit_pantry_item' item.id %}" class="btn btn-sm btn-primary">Edit</a>
+                    <a href="{% url 'delete_pantry_item' item.id %}" class="btn btn-sm btn-danger">Delete</a>
+                </div>
+
             </div>
         </div>
     </div>

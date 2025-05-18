@@ -1,0 +1,20 @@
+{% extends 'pantry/base.html' %}
+{% block content %}
+<h2>Edit Pantry Item</h2>
+<form method="post">
+    {% csrf_token %}
+    <label>Quantity:</label>
+    <input type="text" name="quantity" value="{{ item.quantity }}"><br>
+    <label>Unit:</label>
+    <input type="text" name="unit" value="{{ item.unit }}"><br>
+    <label>Storage Location:</label>
+    <select name="storage_location">
+        <option value="pantry" {% if item.storage_location == "pantry" %}selected{% endif %}>Pantry</option>
+        <option value="fridge" {% if item.storage_location == "fridge" %}selected{% endif %}>Fridge</option>
+        <option value="freezer" {% if item.storage_location == "freezer" %}selected{% endif %}>Freezer</option>
+    </select><br>
+    <label>Expiry Date:</label>
+    <input type="text" name="expiry_date" value="{{ item.expiry_date }}"><br>
+    <button type="submit">Save</button>
+</form>
+{% endblock %}
