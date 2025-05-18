@@ -1,4 +1,5 @@
 # Python
+ HEAD
 __pycache__/
 *.py[cod]
 
@@ -17,8 +18,18 @@ db.sqlite3
 */migrations/*.pyc
 */migrations/*.pyo
 */migrations/*.pyd
+ HEAD
 
 # Env
+=======
+=======
+*.pyc
+*~
+__pycache__
+
+# Env
+.env
+ 52899d0 (Updated dashboard.html before merging)
 myvenv/
 venv/
 
@@ -35,5 +46,12 @@ ehthumbs*.db
 $RECYCLE.BIN/
 
 # Visual Studio
+ HEAD
 .history/
 *.code-workspace
+=======
+.vscode/
+.history/
+*.code-workspace
+ origin/pantry-feature
+ 52899d0 (Updated dashboard.html before merging)
