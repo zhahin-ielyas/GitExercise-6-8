@@ -3,16 +3,16 @@
 
 {% block content %}
 <div class="mb-4 text-end">
-    <a href="{% url 'generate_recipes' %}" class="btn btn-success">Generate Recipes</a>
+    <a href="{% url 'select_ingredients' %}" class="btn btn-success">Generate Recipes</a>
 </div>
 <div class="row">
     {% for item in pantry_items %}
     <div class="col-md-4">
         <div class="card mb-3">
             {% if item.ingredient.image_url %}
-                <img src="{{ item.ingredient.image_url }}" class="card-img-top" alt="{{ item.ingredient.name }}">
+                <img src="{{ item.ingredient.image_url }}" alt="{{ item.ingredient.name }}" style="width: 100px; height: 100px;">
             {% else %}
-                <div class="text-center py-3">No image available</div>
+                <img src="https://via.placeholder.com/100?text=No+Image" alt="No image">
             {% endif %}
 
             <div class="card-body">

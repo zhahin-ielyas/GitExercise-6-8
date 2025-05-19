@@ -4,6 +4,7 @@ from . models import Ingredient, PantryItem
 from .forms import PantryForm
 from django.http import HttpResponse
 from django.conf import settings
+from django.views.decorators.http import require_POST
 
 print("== pantry/views.py loaded ==")
 
@@ -76,31 +77,29 @@ def add_pantry_item(request):
         if expiry and expiry.lower() == 'n/a':
             expiry = None
 
-        if ingredient_name:
-    # 👇 Add full image URL if it's just a filename
-            if image_url and not image_url.startswith('http'):
-                image_url = f"https://spoonacular.com/cdn/ingredients_250x250/{image_url}"
+        ingredient, created = Ingredient.objects.get_or_create(
+            name__iexact=ingredient_name,
+            defaults={"name": ingredient_name}
+        )
 
-                ingredient, created = Ingredient.objects.get_or_create(
-                name=ingredient_name,
-                defaults={'default_quantity': quantity, 'default_unit': unit, 'image_url': image_url}
-                )
-
-    # Update missing image_url if it wasn't set earlier
-            if not created and not ingredient.image_url and image_url:
+        # Fetch image if newly created and no image provided
+        if created or not ingredient.image_url:
+            image_url = fetch_image_from_spoonacular(ingredient_name)
+            if image_url:
                 ingredient.image_url = image_url
                 ingredient.save()
 
+        PantryItem.objects.create(
+            user=request.user,
+            ingredient=ingredient,
+            quantity=quantity,
+            unit=unit,
+            storage_location=location,
+            expiry_date=expiry
+        )
+        return redirect('ingredient_list')
 
-            PantryItem.objects.create(
-                user=request.user,
-                ingredient=ingredient,
-                quantity=quantity,
-                unit=unit,
-                storage_location=location,
-                expiry_date=expiry
-            )
-            return redirect('ingredient_list')
+    return render(request, 'pantry/add_pantry_item.html')
 
 # Shows saved item from URL
 def pantry_item_detail(request, item_id):
@@ -138,8 +137,12 @@ def delete_pantry_item(request, item_id):
     return render(request, 'pantry/delete_pantry_item.html', {'item': item})
 
 def generate_recipes(request):
-    user = request.user
-    pantry_items = PantryItem.objects.filter(user=user)
+    if request.method == "POST":
+        selected_ids = request.POST.getlist('ingredients')  # list of PantryItem IDs
+        pantry_items = PantryItem.objects.filter(id__in=selected_ids, user=request.user)
+    else:
+        pantry_items = PantryItem.objects.filter(user=request.user)
+
     ingredients = ",".join([item.ingredient.name for item in pantry_items])
 
     url = "https://api.spoonacular.com/recipes/findByIngredients"
@@ -166,4 +169,11 @@ def recipe_detail(request, recipe_id):
     recipe = response.json()
 
     return render(request, "pantry/recipe_detail.html", {"recipe": recipe})
+
+def select_ingredients(request):
+    pantry_items = PantryItem.objects.filter(user=request.user)
+
+    return render(request, 'pantry/select_ingredients.html', {
+        'pantry_items': pantry_items
+    })
 
