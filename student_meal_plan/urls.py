@@ -17,16 +17,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from users import views as user_views
-from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', user_views.login_view, name='login'),
+    path('login/', user_views.login_view, name='login'),       # Changed here: login URL is now /login/
     path('register/', user_views.register, name='register'),
     path('logout/', user_views.logout_view, name='logout'),
     path('dashboard/', user_views.dashboard, name='dashboard'),
     path('pantry/', include('pantry.urls')),
 ]
+
 
 
 
