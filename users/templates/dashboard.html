@@ -49,6 +49,7 @@
       cursor: pointer;
       text-decoration: none;
       transition: background 0.3s ease, transform 0.2s;
+      margin: 8px;
     }
 
     .button:hover {
@@ -63,9 +64,7 @@
     }
 
     .alert {
-      background-color: #ffe0e0;
-      color: #b30000;
-      border: 1px solid #ff9999;
+      border: 1px solid #ccc;
       padding: 15px;
       border-radius: 10px;
       margin-bottom: 20px;
@@ -88,23 +87,49 @@
     <h2>Welcome to Your Dashboard</h2>
     <p class="welcome">Hello, {{ user.username }} 👋</p>
 
-    {% if count_expiring > 0 %}
-      <div class="alert">
-        ⚠️ <strong>{{ count_expiring }} item{{ count_expiring|pluralize }} expiring soon:</strong>
-        <ul>
-          {% for item in expiring_items %}
-            <li><strong>{{ item.name }}</strong> - expires on {{ item.expiry_date }}</li>
-          {% endfor %}
-        </ul>
-      </div>
+    {% if expired_items or expiring_today or expiring_soon %}
+
+      {% if expired_items %}
+        <div class="alert" style="background-color:#ffe0e0; color:#b30000; border-color:#ff9999;">
+          🔴 <strong>{{ expired_items.count }} item{{ expired_items.count|pluralize }} expired:</strong>
+          <ul>
+            {% for item in expired_items %}
+              <li><strong>{{ item.ingredient.name }}</strong> – expired on {{ item.expiry_date }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      {% if expiring_today %}
+        <div class="alert" style="background-color:#fff4cc; color:#c47f00; border-color:#ffd966;">
+          🟡 <strong>{{ expiring_today.count }} item{{ expiring_today.count|pluralize }} expiring today:</strong>
+          <ul>
+            {% for item in expiring_today %}
+              <li><strong>{{ item.ingredient.name }}</strong> – expires today ({{ item.expiry_date }})</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      {% if expiring_soon %}
+        <div class="alert" style="background-color:#fff0d6; color:#b36b00; border-color:#ffc266;">
+          🟠 <strong>{{ expiring_soon.count }} item{{ expiring_soon.count|pluralize }} expiring soon:</strong>
+          <ul>
+            {% for item in expiring_soon %}
+              <li><strong>{{ item.ingredient.name }}</strong> – expires on {{ item.expiry_date }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
     {% else %}
-      <p>No pantry items are expiring soon. 👍</p>
+      <p style="color: green;">✅ No pantry items are expiring or expired. All good!</p>
     {% endif %}
 
     <p>You're now logged in to your Student Meal Plan system. From here, you can view meals, plan menus, track your pantry, and more!</p>
+
+    <a href="{% url 'ingredient_list' %}" class="button">Go to Pantry</a>
     <a href="{% url 'logout' %}" class="button">Logout</a>
   </div>
 </body>
 </html>
-
-

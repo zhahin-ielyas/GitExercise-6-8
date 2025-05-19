@@ -9,4 +9,5 @@ urlpatterns = [
     path('pantry/add/', views.add_pantry_item, name='add_pantry_item'),
     # Display item view
     path('item/<int:item_id>/', views.pantry_item_detail, name='pantry_item_detail'),
+    path('', views.ingredient_list, name='ingredient_list'),
 ]
