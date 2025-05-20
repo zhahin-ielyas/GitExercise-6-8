@@ -1,4 +1,3 @@
-<!-- Edited by yas on 2025-05-20 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,9 +18,9 @@
     .dashboard-container {
       background: #fff;
       padding: 40px 35px;
-      border-radius: 18px;
+      border-radius: 20px;
       box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
-      max-width: 600px;
+      max-width: 700px;
       width: 100%;
       text-align: center;
     }
@@ -29,19 +28,67 @@
     h2 {
       color: #185a9d;
       margin-bottom: 20px;
-      font-size: 28px;
+      font-size: 30px;
     }
 
-    p {
+    .welcome {
+      font-size: 18px;
+      color: #444;
+      margin-bottom: 20px;
+    }
+
+    .alert {
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: left;
       font-size: 16px;
-      color: #333;
+    }
+
+    .alert strong {
+      display: block;
+      font-size: 17px;
+      margin-bottom: 10px;
+    }
+
+    .alert ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .alert li {
+      margin-bottom: 6px;
+    }
+
+    .alert.expired {
+      background-color: #ffe0e0;
+      color: #b30000;
+      border: 1px solid #ff9999;
+    }
+
+    .alert.today {
+      background-color: #fff8cc;
+      color: #c47f00;
+      border: 1px solid #ffdd66;
+    }
+
+    .alert.soon {
+      background-color: #fff1cc;
+      color: #b36b00;
+      border: 1px solid #ffc266;
+    }
+
+    .success-message {
+      color: green;
+      font-size: 16px;
+      font-weight: 500;
       margin-bottom: 20px;
     }
 
     .button {
       display: inline-block;
       background-color: #43cea2;
-      color: #fff;
+      color: white;
       padding: 12px 24px;
       font-size: 16px;
       font-weight: bold;
@@ -50,36 +97,12 @@
       cursor: pointer;
       text-decoration: none;
       transition: background 0.3s ease, transform 0.2s;
-      margin: 8px;
+      margin: 10px;
     }
 
     .button:hover {
       background-color: #2ebd94;
-      transform: scale(1.03);
-    }
-
-    .welcome {
-      font-size: 18px;
-      color: #444;
-      margin-bottom: 10px;
-    }
-
-    .alert {
-      border: 1px solid #ccc;
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      text-align: left;
-    }
-
-    .alert ul {
-      margin-top: 10px;
-      padding-left: 20px;
-      text-align: left;
-    }
-
-    .alert li {
-      font-size: 14px;
+      transform: scale(1.05);
     }
   </style>
 </head>
@@ -91,7 +114,7 @@
     {% if expired_items or expiring_today or expiring_soon %}
 
       {% if expired_items %}
-        <div class="alert" style="background-color:#ffe0e0; color:#b30000; border-color:#ff9999;">
+        <div class="alert expired">
           🔴 <strong>{{ expired_items.count }} item{{ expired_items.count|pluralize }} expired:</strong>
           <ul>
             {% for item in expired_items %}
@@ -102,7 +125,7 @@
       {% endif %}
 
       {% if expiring_today %}
-        <div class="alert" style="background-color:#fff4cc; color:#c47f00; border-color:#ffd966;">
+        <div class="alert today">
           🟡 <strong>{{ expiring_today.count }} item{{ expiring_today.count|pluralize }} expiring today:</strong>
           <ul>
             {% for item in expiring_today %}
@@ -113,7 +136,7 @@
       {% endif %}
 
       {% if expiring_soon %}
-        <div class="alert" style="background-color:#fff0d6; color:#b36b00; border-color:#ffc266;">
+        <div class="alert soon">
           🟠 <strong>{{ expiring_soon.count }} item{{ expiring_soon.count|pluralize }} expiring soon:</strong>
           <ul>
             {% for item in expiring_soon %}
@@ -124,7 +147,7 @@
       {% endif %}
 
     {% else %}
-      <p style="color: green;">✅ No pantry items are expiring or expired. All good!</p>
+      <p class="success-message">✅ No pantry items are expiring or expired. All good!</p>
     {% endif %}
 
     <p>You're now logged in to your Student Meal Plan system. From here, you can view meals, plan menus, track your pantry, and more!</p>
@@ -134,3 +157,4 @@
   </div>
 </body>
 </html>
+
