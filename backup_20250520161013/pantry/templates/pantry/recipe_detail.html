@@ -1,0 +1,22 @@
+{% extends 'pantry/base.html' %}
+
+{% block content %}
+<h2>{{ recipe.title }}</h2>
+<img src="{{ recipe.image }}" alt="{{ recipe.title }}" class="img-fluid mb-3" style="max-width:400px;">
+
+<h4>Ingredients</h4>
+<ul>
+  {% for ingredient in recipe.extendedIngredients %}
+    <li>{{ ingredient.original }}</li>
+  {% endfor %}
+</ul>
+
+<h4>Instructions</h4>
+{% if recipe.instructions %}
+  {{ recipe.instructions|safe }}
+{% else %}
+  <p>No instructions available.</p>
+{% endif %}
+
+<a href="{% url 'generate_recipes' %}" class="btn btn-secondary mt-3">Back to Recipes</a>
+{% endblock %}

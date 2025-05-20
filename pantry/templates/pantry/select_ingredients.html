@@ -1,0 +1,44 @@
+{% extends 'pantry/base.html' %}
+{% block content %}
+<h2>Select Ingredients</h2>
+
+<form method="post" action="{% url 'generate_recipes' %}">
+    {% csrf_token %}
+    <div>
+        <label><input type="checkbox" id="select-all"> <strong>Select All</strong></label>
+    </div>
+    <hr>
+
+    <div class="row">
+        {% for item in pantry_items %}
+        <div class="col-md-4">
+            <div class="card mb-3">
+                {% if item.ingredient.image_url %}
+                    <img src="{{ item.ingredient.image_url }}" alt="{{ item.ingredient.name }}" class="card-img-top" style="width: 100%; max-height: 150px; object-fit: contain;">
+                {% else %}
+                    <img src="https://via.placeholder.com/150?text=No+Image" class="card-img-top" alt="No Image">
+                {% endif %}
+
+                <div class="card-body">
+                    <label>
+                        <input type="checkbox" name="ingredients" value="{{ item.id }}">
+                        <strong>{{ item.ingredient.name }}</strong> ({{ item.quantity }} {{ item.unit }})
+                    </label>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <p>No items in pantry.</p>
+        {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Generate Recipes</button>
+</form>
+
+<script>
+document.getElementById('select-all').addEventListener('change', function(e) {
+    const checkboxes = document.querySelectorAll('input[name="ingredients"]');
+    checkboxes.forEach(cb => cb.checked = e.target.checked);
+});
+</script>
+{% endblock %}
