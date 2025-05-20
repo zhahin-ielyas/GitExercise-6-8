@@ -1,6 +1,6 @@
 import requests
 from django.shortcuts import render,redirect, get_object_or_404
-from . models import Ingredient, PantryItem
+from . models import Ingredient, PantryItem, SavedRecipe
 from .forms import PantryForm
 from django.http import HttpResponse
 from django.conf import settings
@@ -48,7 +48,7 @@ def search_ingredients(request):
         url = 'https://api.spoonacular.com/food/ingredients/search'
         params = {
             'query': query,
-            'number': 10,
+            'number': 15,
             'apiKey': settings.SPOONACULAR_API_KEY,
         }
 
@@ -148,7 +148,7 @@ def generate_recipes(request):
     url = "https://api.spoonacular.com/recipes/findByIngredients"
     params = {
         "ingredients": ingredients,
-        "number": 10,
+        "number": 15,
         "ranking": 1,
         "ignorePantry": True,
         "apiKey": settings.SPOONACULAR_API_KEY,
@@ -177,3 +177,24 @@ def select_ingredients(request):
         'pantry_items': pantry_items
     })
 
+def save_recipe(request):
+    if request.method == 'POST':
+        recipe_id = request.POST.get('recipe_id')
+        title = request.POST.get('title')
+        image = request.POST.get('image')
+
+        # Avoid saving duplicate recipes
+        exists = SavedRecipe.objects.filter(user=request.user, recipe_id=recipe_id).exists()
+        if not exists:
+            SavedRecipe.objects.create(
+                user=request.user,
+                title=title,
+                image=image,
+                recipe_id=recipe_id
+            )
+
+        return redirect('view_saved_recipes')  
+    
+def view_saved_recipes(request):
+    saved = SavedRecipe.objects.filter(user=request.user)
+    return render(request, 'pantry/saved_recipes.html', {'saved_recipes': saved})

@@ -32,3 +32,13 @@ class PantryItem(models.Model):
 
     def get_default_unit(self):
         return self.ingredient.default_unit
+    
+class SavedRecipe(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    image = models.URLField(blank=True, null=True)
+    recipe_id = models.IntegerField()  # Spoonacular recipe ID
+    date_saved = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.user.username})"

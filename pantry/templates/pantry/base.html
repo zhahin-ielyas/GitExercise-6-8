@@ -27,6 +27,7 @@
                 <li class="nav-item"><a href="{% url 'ingredient_list_by_category' 'fridge' %}" class="nav-link {% if active_category == 'fridge' %}active{% endif %}">Fridge</a></li>
                 <li class="nav-item"><a href="{% url 'ingredient_list_by_category' 'freezer' %}" class="nav-link {% if active_category == 'freezer' %}active{% endif %}">Freezer</a></li>
                 <a href="{% url 'search_ingredients' %}" class="nav-link {% if active_category == 'search' %}active{% endif %}">Search</a>
+                <a class="nav-link" href="{% url 'view_saved_recipes' %}">Saved Recipes</a>
             </ul>
 
         </div>

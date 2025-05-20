@@ -11,6 +11,14 @@
       <div class="card-body">
         <h5 class="card-title">{{ recipe.title }}</h5>
         <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-primary">View Recipe</a>
+        <form method="post" action="{% url 'save_recipe' %}">
+        {% csrf_token %}
+          <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
+          <input type="hidden" name="title" value="{{ recipe.title }}">
+          <input type="hidden" name="image" value="{{ recipe.image }}">
+          <button type="submit" class="btn btn-sm btn-warning mt-2">Save Recipe</button>
+        </form>
+
       </div>
     </div>
   </div>
