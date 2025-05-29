@@ -57,9 +57,13 @@ ROOT_URLCONF = 'student_meal_plan.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+ HEAD
         'DIRS': [
             BASE_DIR / 'templates'
         ],
+
+        'DIRS': [BASE_DIR / 'templates'],
+ b646c51 (Fix root URL redirect, add email alert utils and templates)
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

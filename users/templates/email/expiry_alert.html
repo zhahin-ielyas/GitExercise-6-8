@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <p>Hi {{ user.username }},</p>
+
+    {% if expired_items %}
+    <p><strong>Expired Items:</strong></p>
+    <ul>
+        {% for item in expired_items %}
+            <li>{{ item.ingredient.name }} – expired on {{ item.expiry_date }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if expiring_soon_items %}
+    <p><strong>Items expiring soon:</strong></p>
+    <ul>
+        {% for item in expiring_soon_items %}
+            <li>{{ item.ingredient.name }} – expires on {{ item.expiry_date }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <p>Please check your pantry and plan accordingly!</p>
+    <p>Thanks,<br>Student Meal Plan Team</p>
+</body>
+</html>

@@ -17,6 +17,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 from users import views as user_views
 from pantry import views
 from django.http import HttpResponse
@@ -28,6 +29,7 @@ urlpatterns = [
     path('logout/', user_views.logout_view, name='logout'),
     path('dashboard/', user_views.dashboard, name='dashboard'),
     path('pantry/', include('pantry.urls')),
+    path('', RedirectView.as_view(url='/dashboard/')), 
 ]
 
 
