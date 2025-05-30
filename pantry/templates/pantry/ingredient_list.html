@@ -2,21 +2,21 @@
 {% load static %}
 
 {% block content %}
-<div class="mb-4 text-end">
-    <a href="{% url 'select_ingredients' %}" class="btn btn-success">Generate Recipes</a>
+<div class="text-end">
+    <a href="{% url 'select_ingredients' %}" class="btn btn-success"><i class="fas fa-utensils"></i>Generate Recipes</a>
 </div>
-<div class="row">
+<div class="ingredient-grid">
     {% for item in pantry_items %}
-    <div class="col-md-4">
-        <div class="card mb-3">
+    <div class="card-body">
+        <div class="ingredient-card">
             {% if item.ingredient.image_url %}
-                <img src="{{ item.ingredient.image_url }}" alt="{{ item.ingredient.name }}" style="width: 100px; height: 100px;">
+                <img src="{{ item.ingredient.image_url }}" alt="{{ item.ingredient.name }}" class="ingredient-image">
             {% else %}
-                <img src="https://via.placeholder.com/100?text=No+Image" alt="No image">
+                <img src="https://via.placeholder.com/100?text=No+Image" alt="No image" class="ingredient-image">
             {% endif %}
 
-            <div class="card-body">
-                <h5 class="card-title">{{ item.ingredient.name }}</h5>
+            <div class="ingredient-card h3">
+                <h5 class="ingredient-card p">{{ item.ingredient.name }}</h5>
                 <p>{{ item.quantity }} {{ item.unit }}</p>
                 <p>Stored in: {{ item.storage_location }}</p>
                 <p>Expires: 
@@ -28,9 +28,9 @@
                 </p>
 
                 <!-- Buttons here -->
-                <div class="d-flex justify-content-between mt-3">
-                    <a href="{% url 'edit_pantry_item' item.id %}" class="btn btn-sm btn-primary">Edit</a>
-                    <a href="{% url 'delete_pantry_item' item.id %}" class="btn btn-sm btn-danger">Delete</a>
+                <div class="card-actions button:hover">
+                    <a href="{% url 'edit_pantry_item' item.id %}" class="btn btn-primary">Edit</a>
+                    <a href="{% url 'delete_pantry_item' item.id %}" class="btn btn-danger">Delete</a>
                 </div>
 
             </div>

@@ -1,20 +1,24 @@
 {% extends 'pantry/base.html' %}
 
 {% block content %}
-<h2>Your Saved Recipes</h2>
-<div class="row">
-  {% for recipe in saved_recipes %}
-    <div class="col-md-4 mb-4">
-      <div class="card">
-        <img src="{{ recipe.image }}" class="card-img-top" alt="{{ recipe.title }}">
-        <div class="card-body">
-          <h5 class="card-title">{{ recipe.title }}</h5>
-          <a href="{% url 'recipe_detail' recipe.recipe_id %}" class="btn btn-primary">View Recipe</a>
+<h2 class="mb-4">Your Saved Recipes</h2>
+
+{% if saved_recipes %}
+  <div class="ingredient-grid">
+    {% for recipe in saved_recipes %}
+      <div class="ingredient-card">
+        <img src="{{ recipe.image }}" class="ingredient-image" alt="{{ recipe.title }}">
+        <h5>{{ recipe.title }}</h5>
+
+        <div class="card-actions">
+          <a href="{% url 'recipe_detail' recipe.recipe_id %}" class="btn btn-recipe">
+            <i class="bi bi-book"></i> View
+          </a>
         </div>
       </div>
-    </div>
-  {% empty %}
-    <p>You haven't saved any recipes yet.</p>
-  {% endfor %}
-</div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>You haven't saved any recipes yet.</p>
+{% endif %}
 {% endblock %}

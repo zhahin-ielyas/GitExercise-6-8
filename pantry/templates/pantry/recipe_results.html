@@ -1,28 +1,31 @@
 {% extends 'pantry/base.html' %}
+{% load static %}
 
 {% block content %}
-<h2>Recipes Based on Your Pantry</h2>
+<h2 class="mb-4">Recipes Based on Your Pantry</h2>
 
-<div class="row">
+<div class="ingredient-grid">
   {% for recipe in recipes %}
-  <div class="col-md-4 mb-4">
-    <div class="card h-100">
-      <img src="{{ recipe.image }}" class="card-img-top" alt="{{ recipe.title }}">
-      <div class="card-body">
-        <h5 class="card-title">{{ recipe.title }}</h5>
-        <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-primary">View Recipe</a>
-        <form method="post" action="{% url 'save_recipe' %}">
-        {% csrf_token %}
+    <div class="ingredient-card">
+      <img src="{{ recipe.image }}" class="ingredient-image" alt="{{ recipe.title }}">
+      <h5>{{ recipe.title }}</h5>
+
+      <div class="card-actions">
+        <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-recipe">
+          <i class="bi bi-book"></i> View
+        </a>
+
+        <form method="post" action="{% url 'save_recipe' %}" style="flex: 1; margin: 0;">
+          {% csrf_token %}
           <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
           <input type="hidden" name="title" value="{{ recipe.title }}">
           <input type="hidden" name="image" value="{{ recipe.image }}">
-          <button type="submit" class="btn btn-sm btn-warning mt-2">Save Recipe</button>
+          <button type="submit" class="btn btn-recipe-alt w-100">
+            <i class="bi bi-bookmark"></i> Save
+          </button>
         </form>
-
       </div>
     </div>
-  </div>
   {% endfor %}
 </div>
 {% endblock %}
-

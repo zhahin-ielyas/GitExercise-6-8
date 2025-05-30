@@ -13,8 +13,8 @@
         <option value="fridge" {% if item.storage_location == "fridge" %}selected{% endif %}>Fridge</option>
         <option value="freezer" {% if item.storage_location == "freezer" %}selected{% endif %}>Freezer</option>
     </select><br>
-    <label>Expiry Date:</label>
-    <input type="text" name="expiry_date" value="{{ item.expiry_date }}"><br>
+    <label for="expiry_date">Expiry date:</label>
+    <input type="date" id="expiry_date" name="expiry_date"></br>
     <button type="submit">Save</button>
 </form>
 {% endblock %}

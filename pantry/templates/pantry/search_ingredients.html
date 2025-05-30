@@ -1,11 +1,5 @@
 {% extends 'pantry/base.html' %}
 {% block content %}
-<div class="container mt-4">
-    <h2>Search Ingredients</h2>
-    <form method="GET" action="{% url 'search_ingredients' %}">
-        <input type="text" name="q" value="{{ query }}" placeholder="Search for an ingredient..." class="form-control mb-3">
-        <button type="submit" class="btn btn-primary">Search</button>
-    </form>
 
     {% if results %}
     <div class="row mt-4">
@@ -36,7 +30,8 @@
                             <option value="Freezer">Freezer</option>
                         </select>
 
-                        <input type="text" name="expiry_date" placeholder="YYYY-MM-DD or N/A">
+                        <label for="expiry_date">Expiry date:</label>
+                        <input type="date" id="expiry_date" name="expiry_date">
 
                         <button type="submit" class="btn btn-success">Add to Pantry</button>
                     </form>
