@@ -16,7 +16,7 @@
         <div class="container d-flex justify-content-between align-items-center">
             <h1 class="mb-0 text-start">Meal Planner</h1>
             <form class="d-flex ms-auto" method="GET" action="{% url 'search_ingredients' %}">
-                <input class="form-control me-2" type="search" name="q" placeholder="Search..." value="{{ request.GET.q }}">
+                <input class="form-control me-2" type="search" name="q" placeholder="Search ingredients..." value="{{ request.GET.q }}">
                 <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i>Search</button>
             </form>
 

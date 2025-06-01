@@ -29,6 +29,7 @@ urlpatterns = [
     path('logout/', user_views.logout_view, name='logout'),
     path('dashboard/', user_views.dashboard, name='dashboard'),
     path('pantry/', include('pantry.urls')),
+    path('recipe/', include('recipe.urls')),
     path('', RedirectView.as_view(url='/dashboard/')), 
 ]
 

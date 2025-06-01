@@ -1,46 +1,57 @@
 {% extends 'pantry/base.html' %}
+{% load static %}
+
 {% block content %}
+<h2 class="mb-4">Search Results</h2>
 
-    {% if results %}
-    <div class="row mt-4">
-        {% for ingredient in results %}
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <img src="https://spoonacular.com/cdn/ingredients_250x250/{{ ingredient.image }}" class="card-img-top" alt="{{ ingredient.name }}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ ingredient.name }}</h5>
-                    <form method="POST" action="{% url 'add_pantry_item' %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="ingredient_name" value="{{ ingredient.name }}">
-                        <input type="hidden" name="image_url" value="{{ ingredient.image }}">
-                        <input type="number" name="quantity" value="1" min="1" required>
-    
-                        <select name="unit">
-                            <option value="unit">unit</option>
-                            <option value="g">g</option>
-                            <option value="kg">kg</option>
-                            <option value="ml">ml</option>
-                            <option value="l">l</option>
-                            <option value="pcs">pcs</option>
-                        </select>
+{% if results %}
+<div class="ingredient-grid">
+  {% for ingredient in results %}
+    <div class="ingredient-card">
+      <img src="https://spoonacular.com/cdn/ingredients_250x250/{{ ingredient.image }}" 
+           class="ingredient-image" 
+           alt="{{ ingredient.name }}">
+      <h5>{{ ingredient.name }}</h5>
 
-                        <select name="storage_location">
-                            <option value="Pantry">Pantry</option>
-                            <option value="Fridge">Fridge</option>
-                            <option value="Freezer">Freezer</option>
-                        </select>
+      <form method="POST" action="{% url 'add_pantry_item' %}" class="mt-2">
+        {% csrf_token %}
+        <input type="hidden" name="ingredient_name" value="{{ ingredient.name }}">
+        <input type="hidden" name="image_url" value="{{ ingredient.image }}">
 
-                        <label for="expiry_date">Expiry date:</label>
-                        <input type="date" id="expiry_date" name="expiry_date">
-
-                        <button type="submit" class="btn btn-success">Add to Pantry</button>
-                    </form>
-
-                </div>
-            </div>
+        <div class="mb-2">
+          <input type="number" name="quantity" value="1" min="1" class="form-control" required>
         </div>
-        {% endfor %}
+
+        <div class="mb-2">
+          <select name="unit" class="form-select">
+            <option value="unit">unit</option>
+            <option value="g">g</option>
+            <option value="kg">kg</option>
+            <option value="ml">ml</option>
+            <option value="l">l</option>
+            <option value="pcs">pcs</option>
+          </select>
+        </div>
+
+        <div class="mb-2">
+          <select name="storage_location" class="form-select">
+            <option value="Pantry">Pantry</option>
+            <option value="Fridge">Fridge</option>
+            <option value="Freezer">Freezer</option>
+          </select>
+        </div>
+
+        <div class="mb-2">
+          <label for="expiry_date">Expiry date:</label>
+          <input type="date" id="expiry_date" name="expiry_date" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-recipe-alt w-100">
+          <i class="bi bi-plus-circle"></i> Add to Pantry
+        </button>
+      </form>
     </div>
-    {% endif %}
+  {% endfor %}
 </div>
+{% endif %}
 {% endblock %}
