@@ -6,7 +6,7 @@
         {% for ingredient in results %}
         <div class="col-md-4">
             <div class="card mb-3">
-                <img src="https://spoonacular.com/cdn/ingredients_250x250/{{ ingredient.image }}" class="card-img-top" alt="{{ ingredient.name }}">
+                <img src="https://spoonacular.com/cdn/ingredients_250x250/{{ ingredient.image }}" class="card-img-top"style="width: 100%; height: 180px; object-fit: cover;"alt="{{ ingredient.name }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ ingredient.name }}</h5>
                     <form method="POST" action="{% url 'add_pantry_item' %}">
@@ -42,5 +42,5 @@
         {% endfor %}
     </div>
     {% endif %}
-</div>
+    
 {% endblock %}

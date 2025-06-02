@@ -2,7 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('pantry/', views.ingredient_list, name='ingredient_list'),
+    path('all/', views.ingredient_list, {'category': None }, name='ingredient_list_all'),
+    path('pantry/', views.ingredient_list, {'category': 'pantry' }, name='ingredient_list'),
     path('pantry/add/', views.add_pantry_item, name='add_pantry_item'),
     path('item/<int:item_id>/', views.pantry_item_detail, name='pantry_item_detail'),
     path('search-ingredient/', views.search_ingredients, name='search_ingredients'),
