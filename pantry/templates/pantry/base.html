@@ -27,7 +27,8 @@
         <!-- Sidebar -->
         <nav class="sidebar">
             <ul>
-                <li><a href="{% url 'ingredient_list' %}" class="{% if active_category == 'all' %}active{% endif %}"><i class="bi bi-grid"></i> All</a></li>
+                <li><a href="{% url 'dashboard' %}"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                <li><a href="{% url 'ingredient_list_all' %}" class="{% if active_category == 'all' %}active{% endif %}"><i class="bi bi-grid"></i> All</a></li>
                 <li><a href="{% url 'ingredient_list_by_category' 'pantry' %}" class="{% if active_category == 'pantry' %}active{% endif %}"><i class="bi bi-basket"></i> Pantry</a></li>
                 <li><a href="{% url 'ingredient_list_by_category' 'fridge' %}" class="{% if active_category == 'fridge' %}active{% endif %}"><i class="bi bi-thermometer-snow"></i> Fridge</a></li>
                 <li><a href="{% url 'ingredient_list_by_category' 'freezer' %}" class="{% if active_category == 'freezer' %}active{% endif %}"><i class="bi bi-snow"></i> Freezer</a></li>

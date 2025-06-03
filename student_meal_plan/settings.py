@@ -57,12 +57,7 @@ ROOT_URLCONF = 'student_meal_plan.urls'
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-
-        'DIRS': [
-            BASE_DIR / 'templates'
-        ],
-
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',       
         'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -135,8 +130,13 @@ LOGIN_URL = '/login/'
 
 # settings.py
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'noreply@studentmealplan.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'izhahin@gmail.com'        # your Gmail address here
+EMAIL_HOST_PASSWORD = 'mlje ibil rxzx nowf'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 MEDIA_URL = '/media/'

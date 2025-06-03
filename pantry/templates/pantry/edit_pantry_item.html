@@ -1,20 +1,34 @@
 {% extends 'pantry/base.html' %}
 {% block content %}
 <h2>Edit Pantry Item</h2>
-<form method="post">
-    {% csrf_token %}
-    <label>Quantity:</label>
-    <input type="text" name="quantity" value="{{ item.quantity }}"><br>
-    <label>Unit:</label>
-    <input type="text" name="unit" value="{{ item.unit }}"><br>
-    <label>Storage Location:</label>
-    <select name="storage_location">
-        <option value="pantry" {% if item.storage_location == "pantry" %}selected{% endif %}>Pantry</option>
-        <option value="fridge" {% if item.storage_location == "fridge" %}selected{% endif %}>Fridge</option>
-        <option value="freezer" {% if item.storage_location == "freezer" %}selected{% endif %}>Freezer</option>
-    </select><br>
-    <label for="expiry_date">Expiry date:</label>
-    <input type="date" id="expiry_date" name="expiry_date"></br>
-    <button type="submit">Save</button>
-</form>
+
+<div class="main-content">
+    <div class="ingredient-card">
+        <form method="post">
+            {% csrf_token %}
+            <label>Quantity:</label>
+            <input type="text" name="quantity" value="{{ item.quantity }}"><br>
+            <label>Unit:</label>
+            <select name="unit">
+                <option value="unit" {% if item.unit == "unit" %}selected{% endif %}>unit</option>
+                <option value="g" {% if item.unit == "g" %}selected{% endif %}>g</option>
+                <option value="kg" {% if item.unit == "kg" %}selected{% endif %}>kg</option>
+                <option value="ml" {% if item.unit == "ml" %}selected{% endif %}>ml</option>
+                <option value="l" {% if item.unit == "l" %}selected{% endif %}>l</option>
+                <option value="pcs" {% if item.unit == "pcs" %}selected{% endif %}>pcs</option>
+            </select><br>
+            <label>Storage Location:</label>
+            <select name="storage_location">
+                <option value="pantry" {% if item.storage_location == "pantry" %}selected{% endif %}>Pantry</option>
+                <option value="fridge" {% if item.storage_location == "fridge" %}selected{% endif %}>Fridge</option>
+                <option value="freezer" {% if item.storage_location == "freezer" %}selected{% endif %}>Freezer</option>
+            </select><br>
+            <label for="expiry_date">Expiry date:</label>
+            <input type="date" id="expiry_date" name="expiry_date"></br>
+            <div class="card-actions button:hover">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

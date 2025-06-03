@@ -1,10 +1,14 @@
 {% extends 'pantry/base.html' %}
 {% block content %}
 <h2>Delete Pantry Item</h2>
-<p>Are you sure you want to delete <strong>{{ item.ingredient.name }}</strong>?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Yes, delete</button>
-    <a href="{% url 'ingredient_list' %}">Cancel</a>
-</form>
+<div class="main-content">
+    <p>Are you sure you want to delete <strong>{{ item.ingredient.name }}</strong>?</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="btn">
+            <button type="submit" class="btn btn-primary">Yes, delete</button>
+            <a href="{% url 'ingredient_list' %}" class="btn btn-danger">Cancel</a>
+        </div>
+    </form>
+</div>
 {% endblock %}
