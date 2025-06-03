@@ -3,94 +3,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Recipe{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe List</title>
     <link rel="stylesheet" href="{% static 'css/recipe.css' %}">
-
 </head>
-<body class="bg-gray-100 text-gray-800">
-  <div class="flex h-screen">
-     <!-- Sidebar -->
-     <aside class="w-64 bg-white p-6 shadow-md overflow-y-auto">
-      <div class="mb-6">
-        <p class="font-medium">Hello! User</p>
-        <p class="text-sm text-gray-500">user@gmail.com</p>
-      </div>
-      <nav class="space-y-2">
-        <a href="#" class="block px-3 py-2 rounded hover:bg-green-100">Dashboard</a>
-        <a href="#" class="block px-3 py-2 rounded hover:bg-green-100">Your Profile</a>
-        <a href="recipe part-test.html" class="block px-3 py-2 rounded bg-green-100 text-green-700 font-medium">Recipes</a>
-        <a href="Weekly Planner.html" class="block px-3 py-2 rounded hover:bg-green-100">Plans</a>
-        <a href="#" class="block px-3 py-2 rounded hover:bg-green-100">Users</a>
-        <a href="#" class="block px-3 py-2 rounded hover:bg-green-100">Messages</a>
-        <a href="#" class="block px-3 py-2 rounded hover:bg-green-100">Announcement Bar</a>
-        <a href="#" class="block px-3 py-2 rounded hover:bg-green-100">FAQ</a>
-        <a href="#" class="block px-3 py-2 rounded text-red-500 hover:bg-red-100">Log out</a>
-      </nav>
-    </aside>
+<body>
+    <div class="sidebar">
+        <h3>Hello! {{ request.user.username }}</h3>
+        <p>{{ request.user.email }}</p>
+        <ul>
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/profile">Your Profile</a></li>
+            <li><a class="active" href="/recipes">Recipes</a></li>
+            <li><a href="/plans">Plans</a></li>
+            <li><a href="/users">Users</a></li>
+            <li><a href="/messages">Messages</a></li>
+            <li><a href="/announcements">Announcement Bar</a></li>
+            <li><a href="/faq">FAQ</a></li>
+            <li><a class="logout" href="/logout">Log out</a></li>
+        </ul>
+    </div>
 
-    <!-- Main content -->
-    <main class="flex-1 p-8 overflow-y-auto">
-      <!-- Header -->
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-        <div>
-          <h2 class="text-2xl font-bold">F&B Recipes</h2>
-          <p class="text-gray-500">Recipes</p>
+    <div class="main">
+        <h2 class="section-title">Recipe List</h2>
+        <form method="get" action="{% url 'search_recipe' %}">
+          <input type="text" name="q" placeholder="Search">
+          <button type="submit">Filter</button>
+        </form>
+
+        <div class="recipe-grid">
+            {% for recipe in recipes %}
+            <div class="recipe-card">
+                <img src="{{ recipe.image }}" alt="{{ recipe.title }}">
+                <p>{{ recipe.title }}</p>
+                <form action="{% url 'save_recipe' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
+                    <input type="hidden" name="title" value="{{ recipe.title }}">
+                    <input type="hidden" name="image" value="{{ recipe.image }}">
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+            {% endfor %}
         </div>
-        <div class="mt-4 sm:mt-0 flex items-center gap-2">
-          <input type="text" placeholder="Search" class="border border-gray-300 rounded px-3 py-1 text-sm" />
-          <button class="bg-gray-200 px-4 py-1 rounded text-sm hover:bg-gray-300">Filter</button>
-        </div>
-      </div>
-
-      <div class="space-y-4">
-
-        <!-- Asian Food Section -->
-        <div class="bg-white p-4 rounded shadow">
-          <div class="cursor-pointer text-center text-black-600 font-semibold" onclick="toggleSection('asian')">
-            Asian Food
-          </div>
-          <div id="asian" class="mt-2 hidden text-sm text-gray-700">
-            <table border="1" align="center">
-            <ul class="list-disc pl-5">
-              <!--<li class="mb-2">-->
-              <tr><td width="200"><img 
-                src="https://www.ajinomotofoodbizpartner.com.my/wp-content/uploads/2023/08/Nasi-Lemak-thumbnail-03.jpg" alt="Nasi Lemak" 
-                class="food-item w-50 h-32 object-cover rounded mb-1"
-                data-name="Nasi Lemak" onclick="test()"/>
-                <div class="popup" onclick="test()">Nasi Lemak
-                    <span class="popuptext" id="myPopup"><i><u>Recipe</u>   </i> 
-                        <li>1 cawan beras
-                            <li>1 kotak santan
-                                <li> 3 cawan air
-                                    <li>
-                                        <a href="https://youtu.be/IUIs4C86Ilo?si=Dx01nG_yNslxw-hK" target="_blank" class="text-blue-200 underline hover:text-blue-400">
-                                          Instruction (videos)
-                                        </a>
-
-                     
-
-
-                    </span>
-                  </div></td><td width="200">
-                  <img 
-                  src="https://ucarecdn.com/d5e26f2a-cdbc-4438-8bbf-1f16c9da0afd/-/scale_crop/1280x960/center/-/quality/normal/-/format/jpeg/malay-mee-goreng.jpg" 
-                  alt="Mee Goreng" 
-                  class="w-50 h-32 object-cover rounded mb-1"
-                  onclick="test1()" />
-                  <div class="popup1" onclick="test1()">Mee Goreng
-                    <span class="popuptext1" id="myPopup1"><i><u>Recipe</u>   </i> 
-                      <li>500g mee
-                          <li>5g tahuu
-                             <li> 2 potong cili 
-                              <li>
-                                <a href="https://youtu.be/j_a2szbPzfA?si=VxS6ml1rWLujdFzs" target="_blank" class="text-blue-200 underline hover:text-blue-400">
-                                  Instruction (videos)
-                                </a>
-
-
-                      </span>
-                  </div>
-                </td>
-</body>  
-</html>             
-                
+    </div>
+</body>
+</html>

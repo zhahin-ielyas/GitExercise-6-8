@@ -7,38 +7,51 @@ from django.conf import settings
 
 
 def recipe_list(request):
-    url = f"https://api.spoonacular.com/recipes/informationBulk"
+    url = 'https://api.spoonacular.com/recipes/complexSearch'
     params = {
-        "includeNutrition": False,
-        "apiKey": settings.SPOONACULAR_API_KEY,
+        'number': 24,  # number of recipes per page
+        'apiKey': settings.SPOONACULAR_API_KEY,
     }
     response = requests.get(url, params=params)
-    recipe = response.json()
+    data = response.json()
+    recipes = data.get('results', [])
 
-    return render(request, "recipe/recipe_list.html", {"recipe": recipe})
+    return render(request, "recipe/recipe_list.html", {"recipes": recipes})
+
 
 
 def search_recipe(request):
     query = request.GET.get('q', '')
-    pantry_items = PantryItem.objects.filter(user=request.user)  # if pantry is user-specific
-    ingredient_list = ",".join(item.ingredient.name for item in pantry_items)
+    pantry_items = PantryItem.objects.filter(user=request.user)
+    pantry_ingredients = set(item.ingredient.name.lower() for item in pantry_items)
+
     results = []
 
     if query:
-        print(f"DEBUG: Searching for '{query}'")
         url = 'https://api.spoonacular.com/recipes/complexSearch'
         params = {
             'query': query,
-            'includeIngredients': ingredient_list,
+            'number': 10,
+            'addRecipeInformation': True,
             'fillIngredients': True,
-            'number': 15,
             'apiKey': settings.SPOONACULAR_API_KEY,
         }
 
         response = requests.get(url, params=params)
         if response.status_code == 200:
             data = response.json()
-            results = data.get('results', [])
+            for recipe in data.get('results', []):
+                ingredients = recipe.get('extendedIngredients', [])
+
+                recipe_ingredients = [i.get('name', '').lower() for i in ingredients]
+
+                have = [i for i in recipe_ingredients if i in pantry_ingredients]
+                missing = [i for i in recipe_ingredients if i not in pantry_ingredients]
+
+                recipe['have_ingredients'] = have
+                recipe['missing_ingredients'] = missing
+
+                results.append(recipe)
         else:
             print("API error:", response.status_code, response.text)
 

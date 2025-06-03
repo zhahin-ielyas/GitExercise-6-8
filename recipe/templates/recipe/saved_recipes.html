@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Recipes</title>
+    <link rel="stylesheet" href="{% static 'css/recipe.css' %}">
+</head>
+<body>
+    <div class="sidebar">
+        <!-- same sidebar -->
+    </div>
+    <div class="main">
+        <h2 class="section-title">Saved Recipes</h2>
+        <div class="recipe-grid">
+            {% for recipe in saved_recipes %}
+            <div class="recipe-card">
+                <img src="{{ recipe.image }}" alt="{{ recipe.title }}">
+                <p>{{ recipe.title }}</p>
+                <form method="POST" action="{% url 'delete_recipe' recipe.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Delete</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
