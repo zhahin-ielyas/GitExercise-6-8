@@ -1,4 +1,4 @@
-{% extends 'pantry/base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
 <h2 class="mb-4">Your Saved Recipes</h2>
@@ -10,11 +10,19 @@
         <img src="{{ recipe.image }}" class="ingredient-image" alt="{{ recipe.title }}">
         <h5>{{ recipe.title }}</h5>
 
-        <div class="card-actions">
-          <a href="{% url 'recipe_detail' recipe.recipe_id %}" class="btn btn-recipe">
+        <div class="card-actions" style="display: flex; gap: 10px;">
+          <a href="{% url 'recipe_detail' recipe.recipe_id %}?from=saved" class="btn btn-recipe" style="flex: 1; text-align: center;">
             <i class="bi bi-book"></i> View
           </a>
+
+          <form method="POST" action="{% url 'delete_recipe' recipe.id %}" style="flex: 1; margin: 0;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-recipe-alt w-100" style="width: 100%;">
+              <i class="bi bi-trash"></i> Delete
+            </button>
+          </form>
         </div>
+
       </div>
     {% endfor %}
   </div>

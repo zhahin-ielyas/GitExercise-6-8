@@ -14,6 +14,7 @@ urlpatterns = [
     path('select_ingredients/', views.select_ingredients, name='select_ingredients'),
     path('save_recipe/', views.save_recipe, name='save_recipe'),
     path('saved_recipes/', views.view_saved_recipes, name='view_saved_recipes'),
+    path('recipe/delete/<int:item_id>/', views.delete_recipe, name='delete_recipe'),
     path('<str:category>/', views.ingredient_list, name='ingredient_list_by_category'),  # Keep catch-all LAST
 ]
 

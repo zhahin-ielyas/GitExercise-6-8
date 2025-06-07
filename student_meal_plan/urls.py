@@ -31,6 +31,7 @@ urlpatterns = [
     path('pantry/', include('pantry.urls')),
     path('recipe/', include('recipe.urls')),
     path('', RedirectView.as_view(url='/dashboard/')), 
+    path("recipe/<int:recipe_id>/", views.recipe_detail, name="recipe_detail"),
 ]
 
 

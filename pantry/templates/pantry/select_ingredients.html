@@ -1,4 +1,4 @@
-{% extends 'pantry/base.html' %}
+{% extends 'base.html' %}
 {% block content %}
 <h2>Select Ingredients</h2>
 
@@ -31,8 +31,9 @@
             <p>No items in pantry.</p>
         {% endfor %}
     </div>
-
+    <div class ="text-end">
     <button type="submit" class="btn btn-primary">Generate Recipes</button>
+    </div>
 </form>
 
 <script>

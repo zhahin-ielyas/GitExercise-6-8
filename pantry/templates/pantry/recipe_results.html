@@ -1,4 +1,4 @@
-{% extends 'pantry/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block content %}
@@ -11,7 +11,7 @@
       <h5>{{ recipe.title }}</h5>
 
       <div class="card-actions">
-        <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-recipe">
+        <a href="{% url 'recipe_detail' recipe.id %}?from=generated" class="btn btn-recipe">
           <i class="bi bi-book"></i> View
         </a>
 

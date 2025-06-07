@@ -1,4 +1,4 @@
-{% extends 'pantry/base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
 <h2>{{ recipe.title }}</h2>
@@ -18,5 +18,14 @@
   <p>No instructions available.</p>
 {% endif %}
 
-<a href="{% url 'generate_recipes' %}" class="btn btn-secondary mt-3">Back to Recipes</a>
+{% if source == "saved" %}
+  <a href="{% url 'view_saved_recipes' %}"><button type="submit" class="btn btn-recipe-alt w -100">← Back to Saved Recipes</button></a>
+{% elif source == "recipe_list" %}
+  <a href="{% url 'recipe_list' %}"><button type="submit" class="btn btn-recipe-alt w -100">← Back to Recipe List</button></a>
+{% elif source == "search" %}
+  <a href="{% url 'search_recipe' %}?recipe_q={{ request.GET.recipe_q|urlencode }}"><button type="submit" class="btn btn-recipe-alt w -100">← Back to Recipes</button></a>
+{% else %}
+  <a href="{% url 'generate_recipes' %}"><button type="submit" class="btn btn-recipe-alt w -100">← Back to Generated Recipes</button></a>
+{% endif %}
+
 {% endblock %}

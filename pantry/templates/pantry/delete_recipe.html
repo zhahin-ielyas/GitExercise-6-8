@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="main">
+    <h2 class="section-title">Confirm Deletion</h2>
+    <p>Are you sure you want to delete <strong>{{ recipe.title }}</strong>?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Yes, delete</button>
+        <a href="{% url 'view_saved_recipes' %}">Cancel</a>
+    </form>
+</div>
+{% endblock %}

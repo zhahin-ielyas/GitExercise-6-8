@@ -5,6 +5,7 @@ from .forms import PantryForm
 from django.http import HttpResponse
 from django.conf import settings
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 
 print("== pantry/views.py loaded ==")
 
@@ -139,6 +140,11 @@ def delete_pantry_item(request, item_id):
 def generate_recipes(request):
     if request.method == "POST":
         selected_ids = request.POST.getlist('ingredients')  # list of PantryItem IDs
+        request.session['selected_ingredient_ids'] = selected_ids
+    else:
+        selected_ids = request.session.get('selected_ingredient_ids', [])
+    
+    if selected_ids:
         pantry_items = PantryItem.objects.filter(id__in=selected_ids, user=request.user)
     else:
         pantry_items = PantryItem.objects.filter(user=request.user)
@@ -148,7 +154,7 @@ def generate_recipes(request):
     url = "https://api.spoonacular.com/recipes/findByIngredients"
     params = {
         "ingredients": ingredients,
-        "number": 15,
+        "number": 16,
         "ranking": 1,
         "ignorePantry": True,
         "apiKey": settings.SPOONACULAR_API_KEY,
@@ -160,6 +166,8 @@ def generate_recipes(request):
     return render(request, "pantry/recipe_results.html", {"recipes": recipes})
 
 def recipe_detail(request, recipe_id):
+    source = request.GET.get("from", "generated")
+
     url = f"https://api.spoonacular.com/recipes/{recipe_id}/information"
     params = {
         "includeNutrition": False,
@@ -168,7 +176,7 @@ def recipe_detail(request, recipe_id):
     response = requests.get(url, params=params)
     recipe = response.json()
 
-    return render(request, "pantry/recipe_detail.html", {"recipe": recipe})
+    return render(request, "pantry/recipe_detail.html", {"recipe": recipe,"source": source,})
 
 def select_ingredients(request):
     pantry_items = PantryItem.objects.filter(user=request.user)
@@ -198,3 +206,11 @@ def save_recipe(request):
 def view_saved_recipes(request):
     saved = SavedRecipe.objects.filter(user=request.user)
     return render(request, 'pantry/saved_recipes.html', {'saved_recipes': saved})
+
+@login_required
+def delete_recipe(request, item_id):
+    recipe = get_object_or_404(SavedRecipe, id=item_id, user=request.user)
+    if request.method == 'POST':
+        recipe.delete()
+        return redirect('view_saved_recipes')
+    return render(request, 'pantry/delete_recipe.html', {'recipe': recipe})

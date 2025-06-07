@@ -1,51 +1,34 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe List</title>
-    <link rel="stylesheet" href="{% static 'css/recipe.css' %}">
-</head>
-<body>
-    <div class="sidebar">
-        <h3>Hello! {{ request.user.username }}</h3>
-        <p>{{ request.user.email }}</p>
-        <ul>
-            <li><a href="/dashboard">Dashboard</a></li>
-            <li><a href="/profile">Your Profile</a></li>
-            <li><a class="active" href="/recipes">Recipes</a></li>
-            <li><a href="/plans">Plans</a></li>
-            <li><a href="/users">Users</a></li>
-            <li><a href="/messages">Messages</a></li>
-            <li><a href="/announcements">Announcement Bar</a></li>
-            <li><a href="/faq">FAQ</a></li>
-            <li><a class="logout" href="/logout">Log out</a></li>
-        </ul>
-    </div>
 
-    <div class="main">
-        <h2 class="section-title">Recipe List</h2>
-        <form method="get" action="{% url 'search_recipe' %}">
-          <input type="text" name="q" placeholder="Search">
-          <button type="submit">Filter</button>
-        </form>
+{% block content %}
 
-        <div class="recipe-grid">
-            {% for recipe in recipes %}
-            <div class="recipe-card">
-                <img src="{{ recipe.image }}" alt="{{ recipe.title }}">
-                <p>{{ recipe.title }}</p>
-                <form action="{% url 'save_recipe' %}" method="post">
+<div class="main">
+    <h2 class="mb-4">Recipe List</h2>
+    <form method="get" action="{% url 'search_recipe' %}">
+        <input type="text" name="recipe_q" placeholder="Search">
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="ingredient-grid">
+        {% for recipe in recipes %}
+        <div class="ingredient-card">
+            <img src="{{ recipe.image }}" class="ingredient-image" alt="{{ recipe.title }}">
+            <h5>{{ recipe.title }}</h5>
+            <div class="card-actions">
+                <a href="{% url 'recipe_detail' recipe.id %}?from=recipe_list" class="btn btn-recipe">
+                    <i class="bi bi-book"></i> View
+                </a>
+                <form action="{% url 'save_recipe' %}" method="post" style="flex: 1; margin: 0;">
                     {% csrf_token %}
                     <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
                     <input type="hidden" name="title" value="{{ recipe.title }}">
                     <input type="hidden" name="image" value="{{ recipe.image }}">
-                    <button type="submit">Save</button>
+                    <button type="submit" class="btn btn-recipe-alt w-100"><i class="bi bi-bookmark"></i> Save</button>
                 </form>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

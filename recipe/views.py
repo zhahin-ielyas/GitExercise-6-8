@@ -21,7 +21,7 @@ def recipe_list(request):
 
 
 def search_recipe(request):
-    query = request.GET.get('q', '')
+    query = request.GET.get('recipe_q', '')
     pantry_items = PantryItem.objects.filter(user=request.user)
     pantry_ingredients = set(item.ingredient.name.lower() for item in pantry_items)
 
@@ -31,7 +31,7 @@ def search_recipe(request):
         url = 'https://api.spoonacular.com/recipes/complexSearch'
         params = {
             'query': query,
-            'number': 10,
+            'number': 12,
             'addRecipeInformation': True,
             'fillIngredients': True,
             'apiKey': settings.SPOONACULAR_API_KEY,
@@ -79,15 +79,3 @@ def save_recipe(request):
 
         return redirect('view_saved_recipes')  
 
-@login_required
-def view_saved_recipes(request):
-    saved = SavedRecipe.objects.filter(user=request.user)
-    return render(request, 'recipe/saved_recipes.html', {'saved_recipes': saved})
-
-@login_required
-def delete_recipe(request, item_id):
-    recipe = get_object_or_404(SavedRecipe, id=item_id, user=request.user)
-    if request.method == 'POST':
-        recipe.delete()
-        return redirect('view_saved_recipes')
-    return render(request, 'recipe/delete_recipe.html', {'recipe': recipe})
