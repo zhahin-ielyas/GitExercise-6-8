@@ -1,6 +1,24 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+DAYS = [
+    ("Mon", "Monday"),
+    ("Tue", "Tuesday"),
+    ("Wed", "Wednesday"),
+    ("Thu", "Thursday"),
+    ("Fri", "Friday"),
+    ("Sat", "Saturday"),
+    ("Sun", "Sunday"),
+]
+
+MEALS = [
+    ("Breakfast", "Breakfast"),
+    ("Snack1", "Snack - 1"),
+    ("Lunch", "Lunch"),
+    ("Snack2", "Snack - 2"),
+    ("Dinner", "Dinner"),
+]
+
 class Ingredient(models.Model):
     name = models.CharField(max_length=100)
     default_quantity = models.FloatField(null=True, blank=True)
