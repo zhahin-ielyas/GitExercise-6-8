@@ -1,6 +1,6 @@
 import requests
 from django.shortcuts import render,redirect, get_object_or_404
-from . models import Ingredient, PantryItem, SavedRecipe
+from . models import Ingredient, PantryItem, SavedRecipe, MealPlan, MEALS, DAYS
 from .forms import PantryForm
 from django.http import HttpResponse
 from django.conf import settings
@@ -49,7 +49,7 @@ def search_ingredients(request):
         params = {
             'query': query,
             'number': 15,
-            'apiKey': settings.SPOONACULAR_API_KEY,
+            'apiKey': settings.SPOONACULAR_API_KEY,    
         }
 
         response = requests.get(url, params=params)
@@ -79,12 +79,12 @@ def add_pantry_item(request):
 
         ingredient, created = Ingredient.objects.get_or_create(
             name__iexact=ingredient_name,
-            defaults={"name": ingredient_name}
+            defaults={"name": ingredient_name}    
         )
 
         # Fetch image if newly created and no image provided
         if created or not ingredient.image_url:
-            image_url = fetch_image_from_spoonacular(ingredient_name)
+            image_url = fetch_image_from_spoonacular(ingredient_name)    
             if image_url:
                 ingredient.image_url = image_url
                 ingredient.save()
@@ -198,3 +198,67 @@ def save_recipe(request):
 def view_saved_recipes(request):
     saved = SavedRecipe.objects.filter(user=request.user)
     return render(request, 'pantry/saved_recipes.html', {'saved_recipes': saved})
+
+def view_weekly_planner(request):
+    plan = {}
+    for meal_key, _ in MEALS:
+        plan[meal_key] = {day_code: '' for day_code, _ in DAYS}
+
+    for entry in MealPlan.objects.all():
+        if entry.meal_type in plan:
+            plan[entry.meal_type][entry.day] = entry.food
+
+    return render(request, 'pantry/weekly_planner.html', {
+        'plan': plan,
+        'DAYS': DAYS,
+        'MEALS': MEALS
+    })
+
+
+
+def add_menu_x(request, meal_type, day):
+    if request.method == 'POST':
+        food = request.POST.get('food')
+        MealPlan.objects.create(
+            meal_type=meal_type,
+            day=day,
+            food=food
+        )
+        return redirect('view_weekly_planner')
+
+    return render(request, 'pantry/add_menu.html', {
+        'meal_type': meal_type,
+        'day': day
+    })
+
+
+def add_menu(request, meal_type, day):
+    recipes = []
+    query = request.GET.get('q', '')
+
+    if query:
+        url = "https://api.spoonacular.com/recipes/complexSearch"
+        params = {
+            "query": query,
+            "number": 10,
+            "apiKey": settings.SPOONACULAR_API_KEY,
+        }
+        response = requests.get(url, params=params)
+        if response.status_code == 200:
+            recipes = response.json().get("results", [])
+
+    if request.method == 'POST':
+        food = request.POST.get('food')
+        MealPlan.objects.update_or_create(
+            meal_type=meal_type,
+            day=day,
+            defaults={"food": food}
+        )
+        return redirect('view_weekly_planner')
+
+    return render(request, 'pantry/add_menu.html', {
+        'meal_type': meal_type,
+        'day': day,
+        'recipes': recipes,
+        'query': query,
+    })
