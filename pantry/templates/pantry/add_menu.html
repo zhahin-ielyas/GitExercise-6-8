@@ -1,0 +1,29 @@
+{% extends 'pantry/base.html' %}
+{% block content %}
+  <h2 class="text-xl font-bold mb-2">Add Menu for {{ meal_type|capfirst }} on {{ day|capfirst }}</h2>
+
+  <form method="get" class="mb-4">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search menu..." class="border px-2 py-1">
+    <button type="submit" class="bg-blue-500 text-white px-2 py-1 rounded">Search</button>
+  </form>
+
+  {% if recipes %}
+    <form method="post">
+      {% csrf_token %}
+      <ul class="grid grid-cols-1 gap-2">
+        {% for recipe in recipes %}
+          <li class="border p-2 rounded shadow">
+            <label>
+              <input type="radio" name="food" value="{{ recipe.title }}" required>
+              <img src="{{ recipe.image }}" alt="{{ recipe.title }}" class="inline w-12 h-12 mr-2">
+              {{ recipe.title }}
+            </label>
+          </li>
+        {% endfor %}
+      </ul>
+      <button type="submit" class="mt-4 bg-green-600 text-white px-4 py-2 rounded">Add to Planner</button>
+    </form>
+  {% elif query %}
+    <p>No recipes found for "{{ query }}".</p>
+  {% endif %}
+{% endblock %}
