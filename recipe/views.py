@@ -1,20 +1,28 @@
-from django.shortcuts import render,redirect, get_object_or_404
-import requests
-from pantry.models import PantryItem,SavedRecipe
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.db.models import Avg
+from django.contrib import messages
 from django.conf import settings
 
+from pantry.models import PantryItem, SavedRecipe, RecipeRating
+
+import requests
 
 def recipe_list(request):
     url = 'https://api.spoonacular.com/recipes/complexSearch'
     params = {
-        'number': 24,  # number of recipes per page
+        'number': 24,  
         'apiKey': settings.SPOONACULAR_API_KEY,
     }
     response = requests.get(url, params=params)
     data = response.json()
     recipes = data.get('results', [])
+
+    for recipe in recipes:
+        rid = recipe['id']
+        ratings = RecipeRating.objects.filter(recipe_id=rid)
+        recipe['average_rating'] = ratings.aggregate(Avg('rating'))['rating__avg']
+        recipe['rating_count'] = ratings.count()
 
     return render(request, "recipe/recipe_list.html", {"recipes": recipes})
 
@@ -51,6 +59,12 @@ def search_recipe(request):
                 recipe['have_ingredients'] = have
                 recipe['missing_ingredients'] = missing
 
+                rid = recipe['id']
+                ratings = RecipeRating.objects.filter(recipe_id=rid)
+                recipe['average_rating'] = ratings.aggregate(Avg('rating'))['rating__avg']
+                recipe['rating_count'] = ratings.count()
+
+
                 results.append(recipe)
         else:
             print("API error:", response.status_code, response.text)
@@ -67,7 +81,6 @@ def save_recipe(request):
         title = request.POST.get('title')
         image = request.POST.get('image')
 
-        # Avoid saving duplicate recipes
         exists = SavedRecipe.objects.filter(user=request.user, recipe_id=recipe_id).exists()
         if not exists:
             SavedRecipe.objects.create(
@@ -78,4 +91,33 @@ def save_recipe(request):
             )
 
         return redirect('view_saved_recipes')  
+    
+@login_required
+def submit_rating(request, recipe_id):
+    if request.method == 'POST':
+        recipe_id = request.POST.get('recipe_id')
+        rating_value = int(request.POST.get('rating'))
+        source = request.GET.get('source')
+        recipe_q = request.GET.get('recipe_q')
+
+        existing_rating = RecipeRating.objects.filter(user=request.user, recipe_id=recipe_id).first()
+
+        if existing_rating:
+            existing_rating.rating = rating_value
+            existing_rating.save()
+            messages.success(request, "Your rating has been updated.")
+        else:
+            RecipeRating.objects.create(
+                user=request.user,
+                recipe_id=recipe_id,
+                rating=rating_value
+            )
+            messages.success(request, "Thanks for rating!")
+
+        if source == "search" and recipe_q:
+            return redirect(f'/recipe/{recipe_id}/?source=search&recipe_q={recipe_q}')
+        elif source:
+            return redirect(f'/recipe/{recipe_id}/?source={source}')
+        else:
+            return redirect('recipe_detail', recipe_id=recipe_id)
 

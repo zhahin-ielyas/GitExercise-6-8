@@ -1,8 +1,39 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <h2>{{ recipe.title }}</h2>
 <img src="{{ recipe.image }}" alt="{{ recipe.title }}" class="img-fluid mb-3" style="max-width:400px;">
+
+{% if average_rating %}
+  <p><strong>Average Rating:</strong> ⭐ {{ average_rating|floatformat:1 }} ({{ rating_count }} vote{{ rating_count|pluralize }})</p>
+{% else %}
+  <p><strong>No ratings yet. Be the first!</strong></p>
+{% endif %}
+
+{% if user.is_authenticated %}
+  <form method="post" action="{% url 'submit_rating' recipe.id %}?source={{ source }}{% if recipe_q %}&recipe_q={{ recipe_q|urlencode }}{% endif %}">
+    {% csrf_token %}
+    <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
+
+    <div class="mb-3">
+      <label for="rating"><strong>Rate this recipe:</strong></label>
+      <select name="rating" id="rating" class="form-select" style="width: auto; display: inline-block;">
+        <option value="5" {% if user_rating == 5 %}selected{% endif %}>⭐⭐⭐⭐⭐</option>
+        <option value="4" {% if user_rating == 4 %}selected{% endif %}>⭐⭐⭐⭐</option>
+        <option value="3" {% if user_rating == 3 %}selected{% endif %}>⭐⭐⭐</option>
+        <option value="2" {% if user_rating == 2 %}selected{% endif %}>⭐⭐</option>
+        <option value="1" {% if user_rating == 1 %}selected{% endif %}>⭐</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-recipe">Submit Rating</button>
+  </form>
+
+
+{% else %}
+  <p><em>Login to rate this recipe.</em></p>
+{% endif %}
 
 <h4>Ingredients</h4>
 <ul>
@@ -23,7 +54,7 @@
 {% elif source == "recipe_list" %}
   <a href="{% url 'recipe_list' %}"><button type="submit" class="btn btn-recipe-alt w -100">← Back to Recipe List</button></a>
 {% elif source == "search" %}
-  <a href="{% url 'search_recipe' %}?recipe_q={{ request.GET.recipe_q|urlencode }}"><button type="submit" class="btn btn-recipe-alt w -100">← Back to Recipes</button></a>
+  <a href="{% url 'search_recipe' %}?recipe_q={{ recipe_q|urlencode }}"><button type="submit" class="btn btn-recipe-alt w -100">← Back to Recipes</button></a>
 {% else %}
   <a href="{% url 'generate_recipes' %}"><button type="submit" class="btn btn-recipe-alt w -100">← Back to Generated Recipes</button></a>
 {% endif %}

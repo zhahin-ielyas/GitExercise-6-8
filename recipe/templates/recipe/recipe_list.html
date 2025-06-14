@@ -15,8 +15,15 @@
         <div class="ingredient-card">
             <img src="{{ recipe.image }}" class="ingredient-image" alt="{{ recipe.title }}">
             <h5>{{ recipe.title }}</h5>
+
+            {% if recipe.rating_count > 0 %}
+                <p>⭐ {{ recipe.average_rating|floatformat:1 }} ({{ recipe.rating_count }} votes)</p>
+            {% else %}
+                <p>⭐ New recipe – be the first to rate!</p>
+            {% endif %}
+
             <div class="card-actions">
-                <a href="{% url 'recipe_detail' recipe.id %}?from=recipe_list" class="btn btn-recipe">
+                <a href="{% url 'recipe_detail' recipe.id %}?source=recipe_list" class="btn btn-recipe">
                     <i class="bi bi-book"></i> View
                 </a>
                 <form action="{% url 'save_recipe' %}" method="post" style="flex: 1; margin: 0;">

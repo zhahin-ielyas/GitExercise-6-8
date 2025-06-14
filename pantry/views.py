@@ -1,16 +1,12 @@
 import requests
-from django.shortcuts import render,redirect, get_object_or_404
-from . models import Ingredient, PantryItem, SavedRecipe
-from .forms import PantryForm
-from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.db.models import Avg, Count
 
-print("== pantry/views.py loaded ==")
-
-import requests
-from django.conf import settings
+from .models import Ingredient, PantryItem, SavedRecipe, RecipeRating
+from .forms import PantryForm
 
 def fetch_image_from_spoonacular(ingredient_name):
     try:
@@ -64,11 +60,11 @@ def search_ingredients(request):
         'query': query,
         'results': results
     })
-# Updated function: handles both search add + form add
+
 def add_pantry_item(request):
     if request.method == 'POST':
         ingredient_name = request.POST.get('ingredient_name')
-        image_url = request.POST.get('image_url')  # optional input
+        image_url = request.POST.get('image_url')  
         quantity = request.POST.get('quantity')
         unit = request.POST.get('unit')
         location = request.POST.get('storage_location')
@@ -83,7 +79,6 @@ def add_pantry_item(request):
             defaults={"name": ingredient_name}
         )
 
-        # Fetch image if newly created and no image provided
         if created or not ingredient.image_url:
             image_url = fetch_image_from_spoonacular(ingredient_name)
             if image_url:
@@ -102,7 +97,6 @@ def add_pantry_item(request):
 
     return render(request, 'pantry/add_pantry_item.html')
 
-# Shows saved item from URL
 def pantry_item_detail(request, item_id):
     item = get_object_or_404(PantryItem, id=item_id)
     return render(request, 'pantry/pantry_item_detail.html', {
@@ -137,9 +131,16 @@ def delete_pantry_item(request, item_id):
 
     return render(request, 'pantry/delete_pantry_item.html', {'item': item})
 
+def select_ingredients(request):
+    pantry_items = PantryItem.objects.filter(user=request.user)
+
+    return render(request, 'pantry/select_ingredients.html', {
+        'pantry_items': pantry_items
+    })
+
 def generate_recipes(request):
     if request.method == "POST":
-        selected_ids = request.POST.getlist('ingredients')  # list of PantryItem IDs
+        selected_ids = request.POST.getlist('ingredients')  
         request.session['selected_ingredient_ids'] = selected_ids
     else:
         selected_ids = request.session.get('selected_ingredient_ids', [])
@@ -166,7 +167,7 @@ def generate_recipes(request):
     return render(request, "pantry/recipe_results.html", {"recipes": recipes})
 
 def recipe_detail(request, recipe_id):
-    source = request.GET.get("from", "generated")
+    source = request.GET.get('source')
 
     url = f"https://api.spoonacular.com/recipes/{recipe_id}/information"
     params = {
@@ -174,16 +175,30 @@ def recipe_detail(request, recipe_id):
         "apiKey": settings.SPOONACULAR_API_KEY,
     }
     response = requests.get(url, params=params)
-    recipe = response.json()
+    recipe = response.json()    
+    recipe_q = request.GET.get('recipe_q')
+    ratings = RecipeRating.objects.filter(recipe_id=recipe_id)
+    average_rating = ratings.aggregate(avg=Avg("rating"))["avg"]
+    rating_count = ratings.aggregate(count=Count("rating"))["count"]
 
-    return render(request, "pantry/recipe_detail.html", {"recipe": recipe,"source": source,})
+    user_rating = None
+    if request.user.is_authenticated:
+        try:
+            user_rating = RecipeRating.objects.get(user=request.user, recipe_id=recipe_id).rating
+        except RecipeRating.DoesNotExist:
+            user_rating = None
 
-def select_ingredients(request):
-    pantry_items = PantryItem.objects.filter(user=request.user)
+    context = {
+        "recipe": recipe,
+        "source": source,
+        "average_rating": average_rating,
+        "rating_count": rating_count,
+        "user_rating": user_rating,
+        "recipe_id": recipe_id,
+        "recipe_q": recipe_q,
+    }
 
-    return render(request, 'pantry/select_ingredients.html', {
-        'pantry_items': pantry_items
-    })
+    return render(request, "pantry/recipe_detail.html", context)
 
 def save_recipe(request):
     if request.method == 'POST':
@@ -191,7 +206,6 @@ def save_recipe(request):
         title = request.POST.get('title')
         image = request.POST.get('image')
 
-        # Avoid saving duplicate recipes
         exists = SavedRecipe.objects.filter(user=request.user, recipe_id=recipe_id).exists()
         if not exists:
             SavedRecipe.objects.create(

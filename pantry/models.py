@@ -37,8 +37,18 @@ class SavedRecipe(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     image = models.URLField(blank=True, null=True)
-    recipe_id = models.IntegerField()  # Spoonacular recipe ID
+    recipe_id = models.IntegerField()  
     date_saved = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.title} ({self.user.username})"
+    
+class RecipeRating(models.Model):
+    recipe_id = models.IntegerField()  
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(choices=[(i, i) for i in range(1, 6)])
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('recipe_id', 'user') 
+

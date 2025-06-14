@@ -11,7 +11,7 @@
         <h5>{{ recipe.title }}</h5>
 
         <div class="card-actions" style="display: flex; gap: 10px;">
-          <a href="{% url 'recipe_detail' recipe.recipe_id %}?from=saved" class="btn btn-recipe" style="flex: 1; text-align: center;">
+          <a href="{% url 'recipe_detail' recipe.recipe_id %}?source=saved" class="btn btn-recipe" style="flex: 1; text-align: center;">
             <i class="bi bi-book"></i> View
           </a>
 

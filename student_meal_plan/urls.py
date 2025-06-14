@@ -19,19 +19,21 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
 from users import views as user_views
-from pantry import views
+from pantry import views as pantry_views 
+from recipe import views  as recipe_views 
 from django.http import HttpResponse
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', user_views.login_view, name='login'),       # Changed here: login URL is now /login/
+    path('login/', user_views.login_view, name='login'),       
     path('register/', user_views.register, name='register'),
     path('logout/', user_views.logout_view, name='logout'),
     path('dashboard/', user_views.dashboard, name='dashboard'),
     path('pantry/', include('pantry.urls')),
     path('recipe/', include('recipe.urls')),
     path('', RedirectView.as_view(url='/dashboard/')), 
-    path("recipe/<int:recipe_id>/", views.recipe_detail, name="recipe_detail"),
+    path("recipe/<int:recipe_id>/", pantry_views.recipe_detail, name="recipe_detail"),
+    path("submit_rating/<int:recipe_id>/", recipe_views.submit_rating, name="submit_rating"),
 ]
 
 
