@@ -93,7 +93,7 @@ def add_pantry_item(request):
             storage_location=location,
             expiry_date=expiry
         )
-        return redirect('ingredient_list')
+        return redirect('ingredient_list_all')
 
     return render(request, 'pantry/add_pantry_item.html')
 
@@ -117,7 +117,7 @@ def edit_pantry_item(request, item_id):
         item.storage_location = request.POST.get('storage_location')
         item.expiry_date = request.POST.get('expiry_date')
         item.save()
-        return redirect('ingredient_list')  
+        return redirect('ingredient_list_all')  
 
     return render(request, 'pantry/edit_pantry_item.html', {'item': item})
 
@@ -127,7 +127,7 @@ def delete_pantry_item(request, item_id):
 
     if request.method == 'POST':
         item.delete()
-        return redirect('ingredient_list')  
+        return redirect('ingredient_list_all')  
 
     return render(request, 'pantry/delete_pantry_item.html', {'item': item})
 

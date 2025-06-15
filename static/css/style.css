@@ -162,19 +162,6 @@ body {
   margin-bottom: 6px;
 }
 
-.edit-card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: var(--white);
-  padding: 20px;
-  width: 300px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px var(--shadow-medium);
-  text-align: center;
-}
-
 .card-actions {
   display: flex;
   justify-content: space-between;
