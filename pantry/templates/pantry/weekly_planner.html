@@ -1,0 +1,29 @@
+{% extends 'pantry/base.html' %}
+{% load custom_tags %}  {# Make sure your custom template tags are registered under 'custom_tags.py' #}
+
+{% block content %}
+  <table class="table-auto border-collapse border border-gray-300">
+    <thead>
+      <tr>
+        <th class="border p-2 bg-gray-100">Meal / Day</th>
+        {% for code, name in DAYS %}
+          <th class="border p-2 bg-gray-100">{{ name }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for meal_code, label in MEALS %}
+        <tr>
+          <td class="border p-2 font-bold bg-gray-50">{{ label }}</td>
+          {% for code, name in DAYS %}
+            <td class="border p-2">
+              {{ plan|get_item:meal_code|get_item:code }}
+              <br>
+              <a href="{% url 'add_menu' meal_code code %}">Choose Menu</a>
+            </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>    
+  </table>
+{% endblock %}

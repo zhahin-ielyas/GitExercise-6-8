@@ -4,7 +4,6 @@ __pycache__/
 *.py[cod]
 
 # Django
-db.sqlite3
 *.log
 *.pot
 *.pyc
@@ -32,12 +31,6 @@ __pycache__
  52899d0 (Updated dashboard.html before merging)
 myvenv/
 venv/
-
-# Database
-db.sqlite3
-
-# Static folder at project root
-/static/
 
 # Windows
 Thumbs.db*

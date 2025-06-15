@@ -13,8 +13,11 @@ urlpatterns = [
     path("recipe/<int:recipe_id>/", views.recipe_detail, name="recipe_detail"),
     path('select_ingredients/', views.select_ingredients, name='select_ingredients'),
     path('save_recipe/', views.save_recipe, name='save_recipe'),
+    path('weekly_planner/', views.view_weekly_planner, name='view_weekly_planner'),
+    path('add_menu/<str:meal_type>/<str:day>/', views.add_menu, name='add_menu'),
     path('saved_recipes/', views.view_saved_recipes, name='view_saved_recipes'),
     path('recipe/delete/<int:item_id>/', views.delete_recipe, name='delete_recipe'),
-    path('<str:category>/', views.ingredient_list, name='ingredient_list_by_category'),  
+    path('category/<str:category>/', views.ingredient_list, name='ingredient_list_by_category')
+ 
 ]
 

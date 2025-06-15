@@ -1,6 +1,24 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+DAYS = [
+    ("Mon", "Monday"),
+    ("Tue", "Tuesday"),
+    ("Wed", "Wednesday"),
+    ("Thu", "Thursday"),
+    ("Fri", "Friday"),
+    ("Sat", "Saturday"),
+    ("Sun", "Sunday"),
+]
+
+MEALS = [
+    ("Breakfast", "Breakfast"),
+    ("Snack1", "Snack - 1"),
+    ("Lunch", "Lunch"),
+    ("Snack2", "Snack - 2"),
+    ("Dinner", "Dinner"),
+]
+
 class Ingredient(models.Model):
     name = models.CharField(max_length=100)
     default_quantity = models.FloatField(null=True, blank=True)
@@ -42,7 +60,16 @@ class SavedRecipe(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.user.username})"
-    
+class SavedRecipe(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    image = models.URLField(blank=True, null=True)
+    recipe_id = models.IntegerField()  
+    date_saved = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.user.username})"
+
 class RecipeRating(models.Model):
     recipe_id = models.IntegerField()  
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -50,5 +77,4 @@ class RecipeRating(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('recipe_id', 'user') 
-
+        unique_together = ('recipe_id', 'user')   
