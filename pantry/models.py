@@ -60,6 +60,7 @@ class SavedRecipe(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.user.username})"
+
 class SavedRecipe(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
@@ -78,3 +79,12 @@ class RecipeRating(models.Model):
 
     class Meta:
         unique_together = ('recipe_id', 'user')   
+        
+class MealPlan (models.Model):
+    meal_type = models.CharField(max_length=10, choices=MEALS)
+    day = models.CharField(max_length=3, choices=DAYS)
+    food = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return f"{self.meal_type} - {self.day}: {self.food}"
+

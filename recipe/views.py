@@ -24,6 +24,8 @@ def recipe_list(request):
         recipe['average_rating'] = ratings.aggregate(Avg('rating'))['rating__avg']
         recipe['rating_count'] = ratings.count()
 
+    recipes.sort(key=lambda r: (r['average_rating'] is None, -(r['average_rating'] or 0)))
+    
     return render(request, "recipe/recipe_list.html", {"recipes": recipes})
 
 
